@@ -16,6 +16,9 @@ SOURCES=()
 MKSOURCES=""
 CURDIR=`pwd -P`
 
+# --- ASH: allow disabling of building of SDL libs from the environment.
+buildsdl=${BUILDSDL:-yes}
+
 # Fetch sources
 if [[ $# -ge 2 ]]; then
     for src in ${@:2}
@@ -65,11 +68,11 @@ NCPUS="1"
 case "$OSTYPE" in
     darwin*)
         NCPU=`sysctl -n hw.ncpu`
-        ;; 
+        ;;
     linux*)
         if [ -n `which nproc` ]; then
             NCPUS=`nproc`
-        fi  
+        fi
         ;;
   *);;
 esac
@@ -95,7 +98,10 @@ else
     cp -r $SDLPATH/include $BUILDPATH/jni/SDL
 fi
 
-cp -r $SDLPATH/Android.mk $BUILDPATH/jni/SDL
+if [ "$buildsdl" = yes ]; then
+    cp -r $SDLPATH/Android.mk $BUILDPATH/jni/SDL
+fi
+
 sed -i -e "s|YourSourceHere.c|$MKSOURCES|g" $BUILDPATH/jni/src/Android.mk
 sed -i -e "s|org\.libsdl\.app|$APP|g" $BUILDPATH/AndroidManifest.xml
 
