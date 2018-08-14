@@ -1,1 +1,1 @@
-fish-util-bash/functions.bash
+lib/alleycat-bash/functions.bash
