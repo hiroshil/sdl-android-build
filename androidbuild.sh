@@ -18,6 +18,8 @@ CURDIR=`pwd -P`
 
 # --- ASH: allow disabling of building of SDL libs from the environment.
 buildsdl=${BUILDSDL:-yes}
+# --- ASH: flag to disable cleaning the build dir.
+cleanbuilddir=${CLEANBUILDDIR:-yes}
 
 # Fetch sources
 if [[ $# -ge 2 ]]; then
@@ -82,8 +84,10 @@ APPARR=(${APP//./ })
 
 # Start Building
 
-safe-rm-dir-allow-absolute "$BUILDPATH"
-mkdir -p $BUILDPATH
+if [ "$cleanbuilddir" = yes ]; then
+    safe-rm-dir-allow-absolute "$BUILDPATH"
+    mkdir -p $BUILDPATH
+fi
 
 ANDROID_PROJECT_PATH="$( cd "$(dirname "$0")/android-project" ; pwd -P )"
 cp -r "$ANDROID_PROJECT_PATH"/* $BUILDPATH
